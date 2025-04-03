@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>豆柴食量计算器</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen - Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            background-color: #de9339;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .calculator {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 375px;
+            padding: 20px; /* 内边距改为20px */
+            animation: fadeInUp 0.5s ease;
+            margin: 20px; /* 外边距设置为20px */
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            color: #666;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border - color 0.3s ease, transform 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #de9339;
+            outline: none;
+            transform: scale(1.02);
+        }
+
+        input:focus+label,
+        select:focus+label {
+            color: #de9339;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: #de9339;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background - color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:hover {
+            background-color: #c58032;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calculator">
+        <h1>豆柴食量计算器</h1>
+        <form id="shibaForm">
+            <div class="input-group">
+                <label for="weight">豆柴体重 (千克):</label>
+                <input type="number" id="weight" step="0.1" required>
+            </div>
+            <div class="input-group">
+                <label for="age">豆柴年龄 (月):</label>
+                <input type="number" id="age" required>
+            </div>
+            <div class="input-group">
+                <label for="activityLevel">活动水平:</label>
+                <select id="activityLevel">
+                    <option value="low">低</option>
+                    <option value="medium">中</option>
+                    <option value="high">高</option>
+                </select>
+            </div>
+            <button type="submit">计算食量</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const shibaForm = document.getElementById('shibaForm');
+        const resultDiv = document.getElementById('result');
+
+        shibaForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const weight = parseFloat(document.getElementById('weight').value).toFixed(1);
+            const age = parseFloat(document.getElementById('age').value);
+            const activityLevel = document.getElementById('activityLevel').value;
+
+            let baseAmount;
+            if (age < 3) {
+                baseAmount = parseFloat(weight) * 60;
+            } else if (age < 6) {
+                baseAmount = parseFloat(weight) * 50;
+            } else if (age < 12) {
+                baseAmount = parseFloat(weight) * 40;
+            } else {
+                baseAmount = parseFloat(weight) * 30;
+            }
+
+            let activityFactor;
+            switch (activityLevel) {
+                case 'low':
+                    activityFactor = 0.8;
+                    break;
+                case 'medium':
+                    activityFactor = 1.0;
+                    break;
+                case 'high':
+                    activityFactor = 1.2;
+                    break;
+            }
+
+            const dailyFood = baseAmount * activityFactor;
+
+            resultDiv.textContent = `体重为 ${weight} 千克的豆柴，每日建议食量约为 ${dailyFood.toFixed(2)} 克。`;
+        });
+    </script>
+</body>
+
+</html>
